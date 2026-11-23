@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Editor Markdown - TaskSite</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    @import url('../../src/tasksite/static/css/design-tokens.css');
+    @import url('../../src/tasksite/static/css/global.css');
+    @import url('../../src/tasksite/static/css/components.css');
+    @import url('../../src/tasksite/static/css/layout.css');
+    @import url('../../src/tasksite/static/css/markdown.css');
+  </style>
+</head>
+<body>
+  <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
+
+  <header class="navbar" role="banner">
+    <div class="navbar-inner">
+      <a href="/tasks/" class="navbar-brand" aria-label="TaskSite - Inicio">TaskSite</a>
+      <nav class="navbar-nav" id="navbar-nav" aria-label="Navegación principal">
+        <a href="/tasks/" class="navbar-link">Mis tareas</a>
+        <a href="/tasks/new/" class="navbar-link active" aria-current="page">Nueva tarea</a>
+      </nav>
+      <div class="navbar-actions">
+        <div class="dropdown">
+          <button type="button" class="dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-label="Menú de usuario">
+            <span class="avatar" style="background: var(--color-accent);">A</span>
+            <span>usuario</span>
+            <svg width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
+          <div class="dropdown-menu" role="menu">
+            <a href="/cuentas/dashboard/" class="dropdown-item" role="menuitem">Mi perfil</a>
+            <div class="dropdown-divider"></div>
+            <form method="post" action="/cuentas/logout/" style="margin: 0;">
+              <input type="hidden" name="csrfmiddlewaretoken" value="prototype-token">
+              <button type="submit" class="dropdown-item" role="menuitem">Cerrar sesión</button>
+            </form>
+          </div>
+        </div>
+        <button type="button" class="navbar-toggle" id="navbar-toggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="navbar-nav">
+          <svg class="navbar-toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main-content" class="main-content" style="max-width: 48rem; margin: 0 auto; padding: var(--space-6) var(--container-padding);">
+    <header class="page-header">
+      <h1 class="page-title">Nueva tarea</h1>
+      <p class="page-subtitle">Escribe tu tarea en Markdown</p>
+    </header>
+
+    <form method="post" novalidate>
+      <input type="hidden" name="csrfmiddlewaretoken" value="prototype-token">
+
+      <div class="form-field" style="margin-bottom: var(--space-6);">
+        <label for="id_title" class="form-label">Título <span aria-hidden="true">*</span></label>
+        <input type="text" name="title" id="id_title" class="form-input" placeholder="Título de la tarea" required aria-required="true" autofocus>
+      </div>
+
+      <div class="form-field" style="margin-bottom: var(--space-6);">
+        <label class="form-label">Body (Markdown)</label>
+        <div class="markdown-editor" id="markdown-editor">
+          <!-- Toolbar -->
+          <div class="editor-toolbar" role="toolbar" aria-label="Formato Markdown">
+            <button type="button" class="editor-btn" data-action="heading-1" aria-label="Encabezado 1" title="Encabezado 1 (Ctrl+1)">
+              <svg class="editor-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><text x="2" y="16" font-size="14" font-weight="bold">H1</text></svg>
+            </button>
+            <button type="button" class="editor-btn" data-action="heading-2" aria-label="Encabezado 2" title="Encabezado 2 (Ctrl+2)">
+              <svg class="editor-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><text x="2" y="16" font-size="12" font-weight="bold">H2</text></svg>
+            </button>
+            <div class="editor-toolbar-divider" aria-hidden="true"></div>
+            <button type="button" class="editor-btn" data-action="bold" aria-label="Negrita" title="Negrita (Ctrl+B)">
+              <svg class="editor-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M6 4h8a4 4 0 014 4v4a4 4 0 01-4 4H6z"/><path d="M6 12h9a4 4 0 014 4v4a4 4 0 01-4 4H6z"/></svg>
+            </button>
+            <button type="button" class="editor-btn" data-action="italic" aria-label="Cursiva" title="Cursiva (Ctrl+I)">
+              <svg class="editor-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="19" y1="4" x2="10" y2="4"/><line x1="14" y1="20" x2="5" y2="20"/><line x1="15" y1="4" x2="9" y2="20"/></svg>
+            </button>
+            <button type="button" class="editor-btn" data-action="code" aria-label="Código inline" title="Código (Ctrl+E)">
+              <svg class="editor-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+            </button>
+            <div class="editor-toolbar-divider" aria-hidden="true"></div>
+            <button type="button" class="editor-btn" data-action="link" aria-label="Enlace" title="Enlace (Ctrl+K)">
+              <svg class="editor-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+            </button>
+            <div class="editor-toolbar-divider" aria-hidden="true"></div>
+            <button type="button" class="editor-btn" data-action="unordered-list" aria-label="Lista desordenada" title="Lista (Ctrl+L)">
+              <svg class="editor-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="9" y1="6" x2="21" y2="6"/><line x1="9" y1="12" x2="21" y2="12"/><line x1="9" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+            </button>
+            <button type="button" class="editor-btn" data-action="ordered-list" aria-label="Lista ordenada" title="Lista numerada">
+              <svg class="editor-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="10" y1="6" x2="21" y2="6"/><line x1="10" y1="12" x2="21" y2="12"/><line x1="10" y1="18" x2="21" y2="18"/><text x="2" y="7" font-size="9" font-weight="bold">1</text><text x="2" y="13" font-size="9" font-weight="bold">2</text><text x="2" y="19" font-size="9" font-weight="bold">3</text></svg>
+            </button>
+            <button type="button" class="editor-btn" data-action="code-block" aria-label="Bloque de código" title="Bloque de código (Ctrl+Shift+C)">
+              <svg class="editor-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+            </button>
+            <div class="editor-toolbar-divider" aria-hidden="true"></div>
+            <button type="button" class="editor-btn" data-action="task" aria-label="Lista de tareas" title="Checkbox">
+              <svg class="editor-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+            </button>
+            <div class="editor-toolbar-divider" aria-hidden="true"></div>
+            <button type="button" class="editor-btn" data-action="preview" aria-label="Vista previa" title="Alternar vista previa (Ctrl+P)" aria-pressed="false">
+              <svg class="editor-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+
+          <!-- Textarea -->
+          <textarea
+            name="body"
+            id="id_body"
+            class="editor-textarea"
+            placeholder="# Título principal&#10;&#10;Texto en **negrita**, *cursiva*, `código inline`&#10;&#10;## Subtítulo&#10;&#10;- Lista desordenada&#10;- Otro item&#10;&#10;1. Lista ordenada&#10;2. Segundo item&#10;&#10;\`\`\`python&#10;def hola():&#10;    print("Hola, TaskSite!")&#10;\`\`\`&#10;&#10;> Cita importante&#10;&#10;[Enlace](https://example.com)&#10;&#10;---&#10;&#10;- [x] Tarea completada&#10;- [ ] Tarea pendiente"
+            spellcheck="true"
+            aria-label="Contenido de la tarea en Markdown"
+          ></textarea>
+        </div>
+      </div>
+
+      <div class="form-field" style="margin-bottom: var(--space-6);">
+        <label for="id_authors" class="form-label">Coautores (opcional)</label>
+        <select name="authors" id="id_authors" class="form-multiselect" multiple aria-describedby="authors-help">
+          <option value="2">maria (maria@example.com)</option>
+          <option value="3">carlos (carlos@example.com)</option>
+          <option value="4">laura (laura@example.com)</option>
+          <option value="5">pedro (pedro@example.com)</option>
+        </select>
+        <span id="authors-help" class="form-help">Mantén Ctrl/Cmd para seleccionar múltiples. Solo usuarios activos.</span>
+      </div>
+
+      <div style="display: flex; gap: var(--space-3); flex-wrap: wrap;">
+        <button type="submit" class="btn btn-primary">
+          <svg width="1.125rem" height="1.125rem" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+          Crear tarea
+        </button>
+        <a href="/tasks/" class="btn btn-secondary">Cancelar</a>
+      </div>
+    </form>
+
+    <!-- Preview Modal (simulated) -->
+    <dialog id="preview-dialog" class="markdown-preview" role="dialog" aria-modal="true" aria-labelledby="preview-title" style="max-width: 64rem; max-height: 80vh;">
+      <div class="dialog-header">
+        <h2 class="dialog-title" id="preview-title">Vista previa</h2>
+        <button type="button" class="dialog-close" aria-label="Cerrar vista previa">
+          <svg class="dialog-close-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="dialog-content" style="padding: var(--space-6); max-height: calc(80vh - 80px);" id="preview-content"></div>
+    </dialog>
+  </main>
+
+  <footer class="footer" role="contentinfo">
+    <p>TaskSite — Sistema de gestión de tareas</p>
+  </footer>
+
+  <script>
+    // Navbar toggle
+    const navbarToggle = document.getElementById('navbar-toggle');
+    const navbarNav = document.getElementById('navbar-nav');
+    if (navbarToggle && navbarNav) {
+      navbarToggle.addEventListener('click', () => {
+        const expanded = navbarToggle.getAttribute('aria-expanded') === 'true';
+        navbarToggle.setAttribute('aria-expanded', !expanded);
+        navbarNav.setAttribute('open', !expanded);
+      });
+    }
+
+    // Markdown Editor functionality
+    const editor = document.getElementById('markdown-editor');
+    const textarea = editor?.querySelector('.editor-textarea');
+    const previewBtn = editor?.querySelector('[data-action="preview"]');
+    const previewDialog = document.getElementById('preview-dialog');
+    const previewContent = document.getElementById('preview-content');
+
+    // Simple markdown rendering (para demo - en producción usar marked.js o similar)
+    function renderMarkdown(md) {
+      return md
+        .replace(/^### (.*$)/gim, '<h3>$1</h3>')
+        .replace(/^## (.*$)/gim, '<h2>$1</h2>')
+        .replace(/^# (.*$)/gim, '<h1>$1</h1>')
+        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\*(.+?)\*/g, '<em>$1</em>')
+        .replace(/`(.+?)`/g, '<code>$1</code>')
+        .replace(/```(\w+)?\n([\s\S]*?)```/g, '<pre><code class="language-$1">$2</code></pre>')
+        .replace(/^> (.*$)/gim, '<blockquote>$1</blockquote>')
+        .replace(/^\- \[x\] (.*$)/gim, '<li><input type="checkbox" checked disabled> $1</li>')
+        .replace(/^\- \[ \] (.*$)/gim, '<li><input type="checkbox" disabled> $1</li>')
+        .replace(/^\- (.*$)/gim, '<li>$1</li>')
+        .replace(/^\d+\. (.*$)/gim, '<li>$1</li>')
+        .replace(/\[(.+?)\]\((.+?)\)/g, '<a href="$2">$1</a>')
+        .replace(/^---$/gim, '<hr>')
+        .replace(/\n/g, '<br>');
+    }
+
+    function wrapInUl(html) {
+      return html.replace(/(<li>.*<\/li>)/g, '<ul>$1</ul>');
+    }
+
+    function updatePreview() {
+      if (!textarea || !previewContent) return;
+      let html = renderMarkdown(textarea.value);
+      // Wrap consecutive li in ul
+      html = html.replace(/(<li>.*<\/li>\s*)+/g, (match) => '<ul>' + match + '</ul>');
+      previewContent.innerHTML = html;
+    }
+
+    // Preview button
+    previewBtn?.addEventListener('click', () => {
+      const isOpen = previewBtn.getAttribute('aria-pressed') === 'true';
+      previewBtn.setAttribute('aria-pressed', !isOpen);
+      previewBtn.classList.toggle('active', !isOpen);
+      if (!isOpen) {
+        updatePreview();
+        previewDialog.showModal();
+      } else {
+        previewDialog.close();
+      }
+    });
+
+    // Close preview
+    previewDialog?.querySelector('.dialog-close')?.addEventListener('click', () => {
+      previewDialog.close();
+      previewBtn.setAttribute('aria-pressed', 'false');
+      previewBtn.classList.remove('active');
+    });
+    previewDialog?.addEventListener('click', (e) => {
+      if (e.target === previewDialog) {
+        previewDialog.close();
+        previewBtn.setAttribute('aria-pressed', 'false');
+        previewBtn.classList.remove('active');
+      }
+    });
+    previewDialog?.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        previewDialog.close();
+        previewBtn.setAttribute('aria-pressed', 'false');
+        previewBtn.classList.remove('active');
+      }
+    });
+
+    // Toolbar actions
+    const toolbarActions = {
+      'heading-1': { prefix: '# ', suffix: '' },
+      'heading-2': { prefix: '## ', suffix: '' },
+      'bold': { prefix: '**', suffix: '**' },
+      'italic': { prefix: '*', suffix: '*' },
+      'code': { prefix: '`', suffix: '`' },
+      'link': { prefix: '[', suffix: '](url)' },
+      'unordered-list': { prefix: '- ', suffix: '' },
+      'ordered-list': { prefix: '1. ', suffix: '' },
+      'code-block': { prefix: '```\n', suffix: '\n```' },
+      'task': { prefix: '- [ ] ', suffix: '' },
+    };
+
+    editor?.querySelectorAll('.editor-btn[data-action]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const action = btn.dataset.action;
+        if (action === 'preview') return; // Handled separately
+        const { prefix, suffix } = toolbarActions[action] || {};
+        if (!prefix) return;
+
+        const start = textarea.selectionStart;
+        const end = textarea.selectionEnd;
+        const selectedText = textarea.value.substring(start, end);
+        const replacement = prefix + selectedText + suffix;
+
+        textarea.value = textarea.value.substring(0, start) + replacement + textarea.value.substring(end);
+        textarea.focus();
+
+        // Move cursor
+        if (selectedText) {
+          textarea.setSelectionRange(start + prefix.length, start + prefix.length + selectedText.length);
+        } else {
+          textarea.setSelectionRange(start + prefix.length, start + prefix.length);
+        }
+
+        // Visual feedback
+        btn.classList.add('active');
+        setTimeout(() => btn.classList.remove('active'), 150);
+      });
+    });
+
+    // Keyboard shortcuts
+    textarea?.addEventListener('keydown', (e) => {
+      // Tab support
+      if (e.key === 'Tab') {
+        e.preventDefault();
+        const start = textarea.selectionStart;
+        const end = textarea.selectionEnd;
+        textarea.value = textarea.value.substring(0, start) + '  ' + textarea.value.substring(end);
+        textarea.setSelectionRange(start + 2, start + 2);
+      }
+
+      // Shortcuts
+      if (e.ctrlKey || e.metaKey) {
+        switch (e.key.toLowerCase()) {
+          case 'b': e.preventDefault(); toolbarAction('bold'); break;
+          case 'i': e.preventDefault(); toolbarAction('italic'); break;
+          case 'e': e.preventDefault(); toolbarAction('code'); break;
+          case 'k': e.preventDefault(); toolbarAction('link'); break;
+          case 'l': e.preventDefault(); toolbarAction('unordered-list'); break;
+          case 'p': e.preventDefault(); previewBtn?.click(); break;
+          case '1': e.preventDefault(); toolbarAction('heading-1'); break;
+          case '2': e.preventDefault(); toolbarAction('heading-2'); break;
+        }
+      }
+    });
+
+    function toolbarAction(action) {
+      const btn = editor?.querySelector(`[data-action="${action}"]`);
+      btn?.click();
+    }
+
+    // Auto-update preview on input (debounced)
+    let previewTimeout;
+    textarea?.addEventListener('input', () => {
+      clearTimeout(previewTimeout);
+      previewTimeout = setTimeout(updatePreview, 300);
+    });
+  </script>
+</body>
+</html>

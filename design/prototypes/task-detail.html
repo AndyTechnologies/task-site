@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Configurar CI/CD Pipeline - TaskSite</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    @import url('../../src/tasksite/static/css/design-tokens.css');
+    @import url('../../src/tasksite/static/css/global.css');
+    @import url('../../src/tasksite/static/css/components.css');
+    @import url('../../src/tasksite/static/css/layout.css');
+    @import url('../../src/tasksite/static/css/markdown.css');
+  </style>
+</head>
+<body>
+  <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
+
+  <header class="navbar" role="banner">
+    <div class="navbar-inner">
+      <a href="/tasks/" class="navbar-brand" aria-label="TaskSite - Inicio">TaskSite</a>
+
+      <nav class="navbar-nav" id="navbar-nav" aria-label="Navegación principal">
+        <a href="/tasks/" class="navbar-link">Mis tareas</a>
+        <a href="/tasks/new/" class="navbar-link">Nueva tarea</a>
+      </nav>
+
+      <div class="navbar-actions">
+        <button type="button" class="btn btn-ghost" id="search-trigger" aria-label="Buscar tareas" aria-expanded="false" aria-controls="search-dialog">
+          <svg width="1.25rem" height="1.25rem" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        </button>
+
+        <button type="button" class="btn btn-secondary" id="sidebar-toggle" aria-label="Mostrar barra lateral" aria-expanded="false" aria-controls="sidebar" style="display: none;">
+          <svg width="1.25rem" height="1.25rem" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><path d="M9 22V12h6v10"/></svg>
+        </button>
+
+        <div class="dropdown">
+          <button type="button" class="dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-label="Menú de usuario">
+            <span class="avatar" style="background: var(--color-accent);">A</span>
+            <span>andy</span>
+            <svg width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
+          <div class="dropdown-menu" role="menu">
+            <a href="/cuentas/dashboard/" class="dropdown-item" role="menuitem">Mi perfil</a>
+            <div class="dropdown-divider"></div>
+            <form method="post" action="/cuentas/logout/" style="margin: 0;">
+              <input type="hidden" name="csrfmiddlewaretoken" value="prototype-token">
+              <button type="submit" class="dropdown-item" role="menuitem">Cerrar sesión</button>
+            </form>
+          </div>
+        </div>
+
+        <button type="button" class="navbar-toggle" id="navbar-toggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="navbar-nav">
+          <svg class="navbar-toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="layout" id="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar" role="complementary" aria-label="Lista de tareas">
+      <div class="sidebar-header">Mis tareas</div>
+      <nav class="sidebar-list" aria-label="Tareas accesibles">
+        <a href="/tasks/1/" class="sidebar-item active" aria-current="page">
+          <span class="sidebar-item-main">
+            <span class="sidebar-item-title">Configurar CI/CD Pipeline</span>
+          </span>
+          <span class="sidebar-item-badge">
+            <span class="badge badge-in-progress">En proceso</span>
+          </span>
+        </a>
+        <a href="/tasks/2/" class="sidebar-item">
+          <span class="sidebar-item-main">
+            <span class="sidebar-item-title">Documentación API REST</span>
+          </span>
+          <span class="sidebar-item-badge">
+            <span class="badge badge-pending">Pendiente</span>
+          </span>
+        </a>
+        <a href="/tasks/3/" class="sidebar-item">
+          <span class="sidebar-item-main">
+            <span class="sidebar-item-title">Refactor auth module</span>
+          </span>
+          <span class="sidebar-item-badge">
+            <span class="badge badge-completed">Realizada</span>
+          </span>
+        </a>
+        <a href="/tasks/4/" class="sidebar-item">
+          <span class="sidebar-item-main">
+            <span class="sidebar-item-title">Configurar entorno dev</span>
+          </span>
+          <span class="sidebar-item-badge">
+            <span class="badge badge-cancelled">Cancelada</span>
+          </span>
+        </a>
+        <a href="/tasks/5/" class="sidebar-item">
+          <span class="sidebar-item-main">
+            <span class="sidebar-item-title">Revisar PR #234</span>
+          </span>
+          <span class="sidebar-item-badge">
+            <span class="badge badge-in-progress">En proceso</span>
+          </span>
+        </a>
+        <a href="/tasks/6/" class="sidebar-item">
+          <span class="sidebar-item-main">
+            <span class="sidebar-item-title">Actualizar dependencias</span>
+          </span>
+          <span class="sidebar-item-badge">
+            <span class="badge badge-pending">Pendiente</span>
+          </span>
+        </a>
+      </nav>
+    </aside>
+
+    <!-- Resize handle -->
+    <div class="sidebar-resize-handle" id="resize-handle" role="separator" aria-label="Redimensionar barra lateral" aria-orientation="horizontal" tabindex="0"></div>
+
+    <!-- Mobile sidebar overlay -->
+    <div class="sidebar-overlay" id="sidebar-overlay" aria-hidden="true"></div>
+
+    <!-- Main content -->
+    <main id="main-content" class="main-content" role="main">
+      <header class="page-header">
+        <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: var(--space-4);">
+          <a href="/tasks/" class="btn btn-ghost btn-sm" style="display: none;" id="back-to-list">
+            <svg width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            Volver
+          </a>
+          <div style="flex: 1;">
+            <h1 class="page-title" style="margin: 0;">Configurar CI/CD Pipeline</h1>
+          </div>
+          <div class="task-detail-actions">
+            <a href="/tasks/1/edit/" class="btn btn-secondary btn-sm">
+              <svg width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+              Editar
+            </a>
+            <a href="/tasks/1/authors/" class="btn btn-ghost btn-sm">
+              <svg width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+              Autores
+            </a>
+          </div>
+        </div>
+      </header>
+
+      <article class="task-detail" role="article">
+        <header class="task-detail-header">
+          <div class="task-detail-title-row">
+            <h1 class="task-detail-title">Configurar CI/CD Pipeline</h1>
+            <span class="badge badge-in-progress">En proceso</span>
+          </div>
+        </header>
+
+        <div class="task-detail-content markdown-preview">
+          <h1>Configurar CI/CD Pipeline</h1>
+
+          <p>Pipeline GitHub Actions para deploy automático a staging y production con tests automatizados.</p>
+
+          <h2>Objetivos</h2>
+          <ul>
+            <li>Ejecutar tests en cada push y PR</li>
+            <li>Build y push de imagen Docker</li>
+            <li>Deploy automático a staging en merge a main</li>
+            <li>Deploy manual a production con approval</li>
+          </ul>
+
+          <h2>Pasos del workflow</h2>
+          <ol>
+            <li><strong>Checkout</strong> - Obtener código del repositorio</li>
+            <li><strong>Setup Python</strong> - Configurar Python 3.12 con cache de dependencias</li>
+            <li><strong>Install dependencies</strong> - <code>uv sync</code> con lockfile</li>
+            <li><strong>Run tests</strong> - <code>uv run python manage.py test</code></li>
+            <li><strong>Lint & Type check</strong> - Ruff + MyPy</li>
+            <li><strong>Build Docker</strong> - Multi-stage build optimizado</li>
+            <li><strong>Deploy staging</strong> - Automático en merge a main</li>
+            <li><strong>Deploy production</strong> - Manual con approval</li>
+          </ol>
+
+          <h2>Configuración requerida</h2>
+          <p>Secrets de GitHub necesarios:</p>
+          <ul>
+            <li><code>DOCKER_REGISTRY</code> - URL del registry</li>
+            <li><code>DOCKER_USERNAME</code> / <code>DOCKER_PASSWORD</code> - Credenciales</li>
+            <li><code>STAGING_KUBECONFIG</code> - Config kubectl staging</li>
+            <li><code>PROD_KUBECONFIG</code> - Config kubectl production</li>
+          </ul>
+
+          <h2>Ejemplo de workflow</h2>
+          <pre><code class="language-yaml">name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'uv'
+      - name: Install dependencies
+        run: uv sync --frozen
+      - name: Run tests
+        run: uv run python manage.py test
+      - name: Lint
+        run: uv run ruff check .
+      - name: Type check
+        run: uv run mypy src/
+
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build & Push
+        uses: docker/build-push-action@v5
+        with:
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+
+  deploy-staging:
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to staging
+        run: |
+          kubectl set image deployment/tasksite tasksite=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+          -n staging
+
+  deploy-production:
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Deploy to production
+        run: |
+          kubectl set image deployment/tasksite tasksite=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+          -n production</code></pre>
+
+          <h2>Checklist</h2>
+          <ul>
+            <li><input type="checkbox" disabled checked> Configurar GitHub Actions workflow</li>
+            <li><input type="checkbox" disabled checked> Configurar secrets en repositorio</li>
+            <li><input type="checkbox" disabled> Tests pasando en CI</li>
+            <li><input type="checkbox" disabled> Deploy staging funcionando</li>
+            <li><input type="checkbox" disabled> Deploy production con approval</li>
+          </ul>
+
+          <blockquote>
+            <p>Nota: El pipeline usa <code>uv</code> para gestión de dependencias, lo que acelera significativamente los builds gracias al cache de lockfile.</p>
+          </blockquote>
+        </div>
+
+        <footer class="task-meta" style="margin-top: var(--space-8);">
+          <div class="task-meta-item">
+            <span class="task-meta-label">Creado por:</span>
+            <span class="task-meta-value">
+              <span class="avatar avatar-sm" style="background: var(--color-accent);">A</span>
+              andy
+            </span>
+          </div>
+          <div class="task-meta-item">
+            <span class="task-meta-label">Creado:</span>
+            <span class="task-meta-value">hace 2 días</span>
+          </div>
+          <div class="task-meta-item">
+            <span class="task-meta-label">Actualizado:</span>
+            <span class="task-meta-value">hace 3 horas</span>
+          </div>
+          <div class="task-meta-item">
+            <span class="task-meta-label">Autores:</span>
+            <div class="authors-list">
+              <span class="author-chip creator">
+                <span class="avatar avatar-sm" style="background: var(--color-accent);">A</span>
+                andy (creador)
+              </span>
+              <span class="author-chip">
+                <span class="avatar avatar-sm" style="background: var(--color-info);">M</span>
+                maria
+              </span>
+            </div>
+          </div>
+        </footer>
+      </article>
+    </main>
+  </div>
+
+  <footer class="footer" role="contentinfo">
+    <p>TaskSite — Sistema de gestión de tareas</p>
+  </footer>
+
+  <!-- Search Dialog (same as task-list) -->
+  <dialog id="search-dialog" role="dialog" aria-modal="true" aria-labelledby="search-dialog-title">
+    <div class="dialog-header">
+      <h2 class="dialog-title" id="search-dialog-title">Buscar tareas</h2>
+      <button type="button" class="dialog-close" aria-label="Cerrar búsqueda">
+        <svg class="dialog-close-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="dialog-content">
+      <form method="get" action="/tasks/" class="search-form">
+        <div class="form-field">
+          <label for="search-q" class="form-label sr-only">Término de búsqueda</label>
+          <input type="search" name="q" id="search-q" class="form-input search-dialog-input" placeholder="Buscar en títulos y contenido..." autocomplete="off" aria-describedby="search-help">
+          <span id="search-help" class="form-help">Busca en títulos y contenido Markdown de tus tareas accesibles</span>
+        </div>
+      </form>
+    </div>
+    <div class="dialog-footer">
+      <button type="button" class="btn btn-ghost" id="search-cancel">Cancelar</button>
+      <button type="submit" form="search-form" class="btn btn-primary">Buscar</button>
+    </div>
+  </dialog>
+
+  <script>
+    // Sidebar toggle mobile
+    const sidebarToggle = document.getElementById('sidebar-toggle');
+    const sidebar = document.getElementById('sidebar');
+    const sidebarOverlay = document.getElementById('sidebar-overlay');
+    const layout = document.getElementById('layout');
+    const backToList = document.getElementById('back-to-list');
+
+    function openSidebar() {
+      sidebar.setAttribute('open', '');
+      sidebarOverlay.setAttribute('open', '');
+      sidebarToggle.setAttribute('aria-expanded', 'true');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeSidebar() {
+      sidebar.removeAttribute('open');
+      sidebarOverlay.removeAttribute('open');
+      sidebarToggle.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+    }
+
+    sidebarToggle?.addEventListener('click', () => {
+      const isOpen = sidebar.hasAttribute('open');
+      isOpen ? closeSidebar() : openSidebar();
+    });
+    sidebarOverlay?.addEventListener('click', closeSidebar);
+
+    // Resize handle
+    const resizeHandle = document.getElementById('resize-handle');
+    let isResizing = false;
+    let startX = 0;
+    let startWidth = 0;
+
+    function startResize(e) {
+      isResizing = true;
+      startX = e.clientX;
+      startWidth = sidebar.offsetWidth;
+      resizeHandle.classList.add('dragging');
+      document.body.style.cursor = 'col-resize';
+      document.body.style.userSelect = 'none';
+      e.preventDefault();
+    }
+    function doResize(e) {
+      if (!isResizing) return;
+      const newWidth = Math.max(224, Math.min(512, startWidth + (e.clientX - startX)));
+      sidebar.style.width = newWidth + 'px';
+      layout.style.gridTemplateColumns = newWidth + 'px 1fr';
+    }
+    function stopResize() {
+      if (!isResizing) return;
+      isResizing = false;
+      resizeHandle.classList.remove('dragging');
+      document.body.style.cursor = '';
+      document.body.style.userSelect = '';
+    }
+
+    resizeHandle?.addEventListener('mousedown', startResize);
+    document.addEventListener('mousemove', doResize);
+    document.addEventListener('mouseup', stopResize);
+    resizeHandle?.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+        e.preventDefault();
+        const step = e.key === 'ArrowLeft' ? -20 : 20;
+        const currentWidth = sidebar.offsetWidth;
+        const newWidth = Math.max(224, Math.min(512, currentWidth + step));
+        sidebar.style.width = newWidth + 'px';
+        layout.style.gridTemplateColumns = newWidth + 'px 1fr';
+      }
+    });
+
+    // Mobile detection
+    function checkMobile() {
+      const isMobile = window.innerWidth < 768;
+      sidebarToggle.style.display = isMobile ? 'flex' : 'none';
+      backToList.style.display = isMobile ? 'inline-flex' : 'none';
+      if (!isMobile) {
+        closeSidebar();
+        sidebar.removeAttribute('open');
+        sidebarOverlay.removeAttribute('open');
+      }
+    }
+    window.addEventListener('resize', checkMobile);
+    checkMobile();
+
+    // Navbar mobile toggle
+    const navbarToggle = document.getElementById('navbar-toggle');
+    const navbarNav = document.getElementById('navbar-nav');
+    if (navbarToggle && navbarNav) {
+      navbarToggle.addEventListener('click', () => {
+        const expanded = navbarToggle.getAttribute('aria-expanded') === 'true';
+        navbarToggle.setAttribute('aria-expanded', !expanded);
+        navbarNav.setAttribute('open', !expanded);
+      });
+    }
+
+    // Search dialog
+    const searchTrigger = document.getElementById('search-trigger');
+    const searchDialog = document.getElementById('search-dialog');
+    const searchCancel = document.getElementById('search-cancel');
+    const searchInput = searchDialog?.querySelector('#search-q');
+
+    function openSearch() {
+      searchDialog.showModal();
+      searchTrigger.setAttribute('aria-expanded', 'true');
+      setTimeout(() => searchInput?.focus(), 100);
+    }
+    function closeSearch() {
+      searchDialog.close();
+      searchTrigger.setAttribute('aria-expanded', 'false');
+      searchTrigger.focus();
+    }
+
+    searchTrigger?.addEventListener('click', openSearch);
+    searchCancel?.addEventListener('click', closeSearch);
+    searchDialog?.addEventListener('click', (e) => {
+      if (e.target === searchDialog) closeSearch();
+    });
+    searchDialog?.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeSearch();
+    });
+    searchInput?.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        searchDialog.querySelector('form').submit();
+      }
+    });
+
+    // Dropdown
+    document.querySelectorAll('.dropdown').forEach(dropdown => {
+      dropdown.addEventListener('click', (e) => {
+        if (e.target.closest('.dropdown-toggle')) {
+          dropdown.toggleAttribute('open');
+          dropdown.querySelector('.dropdown-toggle').setAttribute('aria-expanded', dropdown.hasAttribute('open'));
+        }
+      });
+    });
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.dropdown')) {
+        document.querySelectorAll('.dropdown[open]').forEach(d => {
+          d.removeAttribute('open');
+          d.querySelector('.dropdown-toggle')?.setAttribute('aria-expanded', 'false');
+        });
+      }
+    });
+  </script>
+</body>
+</html>

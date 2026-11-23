@@ -1,0 +1,22 @@
+{% extends 'accounts/base.html' %}
+
+{% block title %}Panel de control - TaskSite{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 28rem; margin: 0 auto; text-align: center;">
+    <div class="welcome" style="margin-bottom: var(--space-8);">
+        <h2 style="margin: 0 0 var(--space-2);">Bienvenido, {{ user.username }}</h2>
+        <p style="color: var(--color-text-muted); margin: 0;">Has iniciado sesión correctamente.</p>
+    </div>
+
+    <a href="{% url 'tasks:list' %}" class="btn btn-primary" style="display: inline-flex; width: auto; margin-bottom: var(--space-4);">
+        <svg width="1.125rem" height="1.125rem" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+        Ir a mis tareas
+    </a>
+
+    <form method="post" action="{% url 'accounts:logout' %}" class="logout-form" style="display: inline;">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger" style="width: auto;">Cerrar sesión</button>
+    </form>
+</div>
+{% endblock %}

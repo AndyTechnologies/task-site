@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registrarse - TaskSite</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    @import url('../../src/tasksite/static/css/design-tokens.css');
+    @import url('../../src/tasksite/static/css/global.css');
+    @import url('../../src/tasksite/static/css/components.css');
+    @import url('../../src/tasksite/static/css/layout.css');
+  </style>
+</head>
+<body>
+  <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
+
+  <header class="navbar" role="banner">
+    <div class="navbar-inner">
+      <a href="/" class="navbar-brand" aria-label="TaskSite - Inicio">TaskSite</a>
+      <nav class="navbar-nav" aria-label="Navegación principal">
+        <a href="/cuentas/login/" class="navbar-link">Iniciar sesión</a>
+        <a href="/cuentas/registro/" class="navbar-link active" aria-current="page">Registrarse</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main-content" class="container" style="padding-top: var(--space-10); padding-bottom: var(--space-16);">
+    <div class="card" style="max-width: 28rem; margin: 0 auto;">
+      <div style="text-align: center; margin-bottom: var(--space-8);">
+        <h1 style="font-size: var(--text-h2); font-weight: var(--font-weight-bold); color: var(--color-text); margin: 0 0 var(--space-2);">Crear cuenta</h1>
+        <p style="color: var(--color-text-muted); margin: 0;">Únete a TaskSite para gestionar tus tareas</p>
+      </div>
+
+      <form method="post" novalidate>
+        <input type="hidden" name="csrfmiddlewaretoken" value="prototype-token">
+
+        {% comment %} Simulación de errores no de campo {% endcomment %}
+        <div class="messages" style="margin-bottom: var(--space-4);" hidden>
+          <li class="error">Por favor, corrija los errores a continuación.</li>
+        </div>
+
+        <div class="form-field">
+          <label for="id_username" class="form-label">Nombre de usuario <span aria-hidden="true">*</span></label>
+          <input type="text" name="username" id="id_username" class="form-input" autocomplete="username" placeholder="usuario" required aria-describedby="username-help" aria-required="true">
+          <span id="username-help" class="form-help">Requerido. 150 caracteres o menos. Letras, dígitos y @/./+/-/_ solamente.</span>
+        </div>
+
+        <div class="form-field">
+          <label for="id_email" class="form-label">Correo electrónico <span aria-hidden="true">*</span></label>
+          <input type="email" name="email" id="id_email" class="form-input" autocomplete="email" placeholder="correo@ejemplo.com" required aria-describedby="email-help" aria-required="true">
+          <span id="email-help" class="form-help">Requerido. Se usará para iniciar sesión y recuperar la cuenta.</span>
+        </div>
+
+        <div class="form-field">
+          <label for="id_password1" class="form-label">Contraseña <span aria-hidden="true">*</span></label>
+          <input type="password" name="password1" id="id_password1" class="form-input" autocomplete="new-password" placeholder="Contraseña" required aria-describedby="password1-help" aria-required="true">
+          <span id="password1-help" class="form-help">Al menos 8 caracteres. No puede ser muy común. No puede ser solo números.</span>
+        </div>
+
+        <div class="form-field">
+          <label for="id_password2" class="form-label">Confirmar contraseña <span aria-hidden="true">*</span></label>
+          <input type="password" name="password2" id="id_password2" class="form-input" autocomplete="new-password" placeholder="Repetir contraseña" required aria-describedby="password2-help" aria-required="true">
+          <span id="password2-help" class="form-help">Ingrese la misma contraseña para verificación.</span>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: var(--space-2);">Registrarse</button>
+      </form>
+
+      <div class="form-footer" style="margin-top: var(--space-6);">
+        <p style="color: var(--color-text-muted); margin: 0;">¿Ya tienes cuenta? <a href="/cuentas/login/" class="btn-ghost" style="padding: 0; font-weight: var(--font-weight-medium);">Iniciar sesión</a></p>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer" role="contentinfo">
+    <p>TaskSite — Sistema de gestión de tareas</p>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const firstInput = document.querySelector('input[autofocus]') || document.querySelector('#id_username');
+      if (firstInput) firstInput.focus();
+    });
+  </script>
+</body>
+</html>

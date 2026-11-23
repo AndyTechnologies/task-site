@@ -1,0 +1,127 @@
+{% extends 'accounts/base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/markdown.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="layout" id="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar" role="complementary" aria-label="Lista de tareas">
+        <div class="sidebar-header">Mis tareas</div>
+        <nav class="sidebar-list" aria-label="Tareas accesibles">
+            {% block sidebar_content %}
+            {% endblock %}
+        </nav>
+    </aside>
+
+    <!-- Resize handle -->
+    <div class="sidebar-resize-handle" id="resize-handle" role="separator" aria-label="Redimensionar barra lateral" aria-orientation="horizontal" tabindex="0"></div>
+
+    <!-- Mobile sidebar overlay -->
+    <div class="sidebar-overlay" id="sidebar-overlay" aria-hidden="true"></div>
+
+    <!-- Main content -->
+    <main id="main-content" class="main-content" role="main">
+        {% block page_header %}
+        {% endblock %}
+
+        {% block tasks_content %}
+        {% endblock %}
+    </main>
+</div>
+
+<!-- Back to list button for mobile -->
+<a href="{% url 'tasks:list' %}" class="btn btn-ghost btn-sm" id="back-to-list" style="display: none; position: fixed; bottom: var(--space-4); left: var(--space-4); z-index: var(--z-sticky);">
+    <svg width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    Volver
+</a>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Sidebar toggle mobile
+    const sidebarToggle = document.getElementById('sidebar-toggle');
+    const sidebar = document.getElementById('sidebar');
+    const sidebarOverlay = document.getElementById('sidebar-overlay');
+    const layout = document.getElementById('layout');
+    const backToList = document.getElementById('back-to-list');
+
+    function openSidebar() {
+        sidebar.setAttribute('open', '');
+        sidebarOverlay.setAttribute('open', '');
+        sidebarToggle.setAttribute('aria-expanded', 'true');
+        document.body.style.overflow = 'hidden';
+    }
+    function closeSidebar() {
+        sidebar.removeAttribute('open');
+        sidebarOverlay.removeAttribute('open');
+        sidebarToggle.setAttribute('aria-expanded', 'false');
+        document.body.style.overflow = '';
+    }
+
+    sidebarToggle?.addEventListener('click', () => {
+        const isOpen = sidebar.hasAttribute('open');
+        isOpen ? closeSidebar() : openSidebar();
+    });
+    sidebarOverlay?.addEventListener('click', closeSidebar);
+
+    // Resize handle
+    const resizeHandle = document.getElementById('resize-handle');
+    let isResizing = false;
+    let startX = 0;
+    let startWidth = 0;
+
+    function startResize(e) {
+        isResizing = true;
+        startX = e.clientX;
+        startWidth = sidebar.offsetWidth;
+        resizeHandle.classList.add('dragging');
+        document.body.style.cursor = 'col-resize';
+        document.body.style.userSelect = 'none';
+        e.preventDefault();
+    }
+    function doResize(e) {
+        if (!isResizing) return;
+        const newWidth = Math.max(224, Math.min(512, startWidth + (e.clientX - startX)));
+        sidebar.style.width = newWidth + 'px';
+        layout.style.gridTemplateColumns = newWidth + 'px 1fr';
+    }
+    function stopResize() {
+        if (!isResizing) return;
+        isResizing = false;
+        resizeHandle.classList.remove('dragging');
+        document.body.style.cursor = '';
+        document.body.style.userSelect = '';
+    }
+
+    resizeHandle?.addEventListener('mousedown', startResize);
+    document.addEventListener('mousemove', doResize);
+    document.addEventListener('mouseup', stopResize);
+    resizeHandle?.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+            e.preventDefault();
+            const step = e.key === 'ArrowLeft' ? -20 : 20;
+            const currentWidth = sidebar.offsetWidth;
+            const newWidth = Math.max(224, Math.min(512, currentWidth + step));
+            sidebar.style.width = newWidth + 'px';
+            layout.style.gridTemplateColumns = newWidth + 'px 1fr';
+        }
+    });
+
+    // Mobile detection
+    function checkMobile() {
+        const isMobile = window.innerWidth < 768;
+        if (sidebarToggle) sidebarToggle.style.display = isMobile ? 'flex' : 'none';
+        if (backToList) backToList.style.display = isMobile ? 'inline-flex' : 'none';
+        if (!isMobile) {
+            closeSidebar();
+            sidebar.removeAttribute('open');
+            sidebarOverlay.removeAttribute('open');
+        }
+    }
+    window.addEventListener('resize', checkMobile);
+    checkMobile();
+</script>
+{% endblock %}

@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mis tareas - TaskSite</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    @import url('../../src/tasksite/static/css/design-tokens.css');
+    @import url('../../src/tasksite/static/css/global.css');
+    @import url('../../src/tasksite/static/css/components.css');
+    @import url('../../src/tasksite/static/css/layout.css');
+  </style>
+</head>
+<body>
+  <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
+
+  <header class="navbar" role="banner">
+    <div class="navbar-inner">
+      <a href="/tasks/" class="navbar-brand" aria-label="TaskSite - Inicio">TaskSite</a>
+
+      <nav class="navbar-nav" id="navbar-nav" aria-label="Navegación principal">
+        <a href="/tasks/" class="navbar-link active" aria-current="page">Mis tareas</a>
+        <a href="/tasks/new/" class="navbar-link">Nueva tarea</a>
+      </nav>
+
+      <div class="navbar-actions">
+        <button type="button" class="btn btn-ghost" id="search-trigger" aria-label="Buscar tareas" aria-expanded="false" aria-controls="search-dialog">
+          <svg width="1.25rem" height="1.25rem" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <span class="sr-only">Buscar</span>
+        </button>
+
+        <div class="dropdown">
+          <button type="button" class="dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-label="Menú de usuario">
+            <span class="avatar" style="background: var(--color-accent);">A</span>
+            <span>usuario</span>
+            <svg width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
+          <div class="dropdown-menu" role="menu">
+            <a href="/cuentas/dashboard/" class="dropdown-item" role="menuitem">Mi perfil</a>
+            <div class="dropdown-divider"></div>
+            <form method="post" action="/cuentas/logout/" style="margin: 0;">
+              <input type="hidden" name="csrfmiddlewaretoken" value="prototype-token">
+              <button type="submit" class="dropdown-item" role="menuitem">Cerrar sesión</button>
+            </form>
+          </div>
+        </div>
+
+        <button type="button" class="navbar-toggle" id="navbar-toggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="navbar-nav">
+          <svg class="navbar-toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main-content" class="main-content" style="max-width: var(--container-max); margin: 0 auto; padding: var(--space-6) var(--container-padding);">
+    <header class="page-header">
+      <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: var(--space-4);">
+        <div>
+          <h1 class="page-title">Mis tareas</h1>
+          <p class="page-subtitle">Gestiona y organiza tu trabajo</p>
+        </div>
+        <a href="/tasks/new/" class="btn btn-primary">
+          <svg width="1.125rem" height="1.125rem" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+          Nueva tarea
+        </a>
+      </div>
+    </header>
+
+    <section aria-label="Lista de tareas">
+      <div class="task-list" role="list">
+        {% comment %} Ejemplo de tareas con diferentes estados {% endcomment %}
+        <article class="task-item" role="listitem">
+          <a href="/tasks/1/" class="task-item-main">
+            <h2 class="task-item-title">Configurar CI/CD Pipeline</h2>
+            <p class="task-item-body">Pipeline GitHub Actions para deploy automático a staging y production con tests automatizados</p>
+            <div class="task-item-meta">
+              <span class="badge badge-in-progress">En proceso</span>
+              <span>Creado por: andy</span>
+              <span>Actualizado: hace 3 horas</span>
+            </div>
+          </a>
+          <span class="task-item-status">
+            <span class="badge badge-in-progress">En proceso</span>
+          </span>
+        </article>
+
+        <article class="task-item" role="listitem">
+          <a href="/tasks/2/" class="task-item-main">
+            <h2 class="task-item-title">Documentación API REST</h2>
+            <p class="task-item-body">Escribir docs OpenAPI para todos los endpoints de autenticación y tareas</p>
+            <div class="task-item-meta">
+              <span class="badge badge-pending">Pendiente</span>
+              <span>Creado por: maria</span>
+              <span>Actualizado: ayer</span>
+            </div>
+          </a>
+          <span class="task-item-status">
+            <span class="badge badge-pending">Pendiente</span>
+          </span>
+        </article>
+
+        <article class="task-item" role="listitem">
+          <a href="/tasks/3/" class="task-item-main">
+            <h2 class="task-item-title">Refactor auth module</h2>
+            <p class="task-item-body">Migrado a custom user model + Argon2id hashing con parámetros OWASP</p>
+            <div class="task-item-meta">
+              <span class="badge badge-completed">Realizada</span>
+              <span>Creado por: andy</span>
+              <span>Actualizado: hace 2 días</span>
+            </div>
+          </a>
+          <span class="task-item-status">
+            <span class="badge badge-completed">Realizada</span>
+          </span>
+        </article>
+
+        <article class="task-item" role="listitem">
+          <a href="/tasks/4/" class="task-item-main">
+            <h2 class="task-item-title">Configurar entorno de desarrollo</h2>
+            <p class="task-item-body">Docker compose con PostgreSQL, Redis y backend Django</p>
+            <div class="task-item-meta">
+              <span class="badge badge-cancelled">Cancelada</span>
+              <span>Creado por: carlos</span>
+              <span>Actualizado: hace 1 semana</span>
+            </div>
+          </a>
+          <span class="task-item-status">
+            <span class="badge badge-cancelled">Cancelada</span>
+          </span>
+        </article>
+      </div>
+
+      {% comment %} Estado vacío - descomentar para probar {% endcomment %}
+      <!--
+      <div class="empty-state" role="status">
+        <svg class="empty-state-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+        <h2 class="empty-state-title">No hay tareas aún</h2>
+        <p class="empty-state-description">Crea tu primera tarea para comenzar a organizar tu trabajo.</p>
+        <a href="/tasks/new/" class="btn btn-primary">
+          <svg width="1.125rem" height="1.125rem" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+          Crear primera tarea
+        </a>
+      </div>
+      -->
+    </section>
+  </main>
+
+  <footer class="footer" role="contentinfo">
+    <p>TaskSite — Sistema de gestión de tareas</p>
+  </footer>
+
+  <!-- Search Dialog -->
+  <dialog id="search-dialog" role="dialog" aria-modal="true" aria-labelledby="search-dialog-title">
+    <div class="dialog-header">
+      <h2 class="dialog-title" id="search-dialog-title">Buscar tareas</h2>
+      <button type="button" class="dialog-close" aria-label="Cerrar búsqueda">
+        <svg class="dialog-close-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="dialog-content">
+      <form method="get" action="/tasks/" class="search-form">
+        <div class="form-field">
+          <label for="search-q" class="form-label sr-only">Término de búsqueda</label>
+          <input type="search" name="q" id="search-q" class="form-input search-dialog-input" placeholder="Buscar en títulos y contenido..." autocomplete="off" aria-describedby="search-help">
+          <span id="search-help" class="form-help">Busca en títulos y contenido Markdown de tus tareas accesibles</span>
+        </div>
+      </form>
+    </div>
+    <div class="dialog-footer">
+      <button type="button" class="btn btn-ghost" id="search-cancel">Cancelar</button>
+      <button type="submit" form="search-form" class="btn btn-primary">Buscar</button>
+    </div>
+  </dialog>
+
+  <script>
+    // Navbar mobile toggle
+    const navbarToggle = document.getElementById('navbar-toggle');
+    const navbarNav = document.getElementById('navbar-nav');
+    if (navbarToggle && navbarNav) {
+      navbarToggle.addEventListener('click', () => {
+        const expanded = navbarToggle.getAttribute('aria-expanded') === 'true';
+        navbarToggle.setAttribute('aria-expanded', !expanded);
+        navbarNav.setAttribute('open', !expanded);
+      });
+    }
+
+    // Search dialog
+    const searchTrigger = document.getElementById('search-trigger');
+    const searchDialog = document.getElementById('search-dialog');
+    const searchCancel = document.getElementById('search-cancel');
+    const searchInput = searchDialog?.querySelector('#search-q');
+
+    function openSearch() {
+      searchDialog.showModal();
+      searchTrigger.setAttribute('aria-expanded', 'true');
+      setTimeout(() => searchInput?.focus(), 100);
+    }
+    function closeSearch() {
+      searchDialog.close();
+      searchTrigger.setAttribute('aria-expanded', 'false');
+      searchTrigger.focus();
+    }
+
+    searchTrigger?.addEventListener('click', openSearch);
+    searchCancel?.addEventListener('click', closeSearch);
+    searchDialog?.addEventListener('click', (e) => {
+      if (e.target === searchDialog) closeSearch();
+    });
+    searchDialog?.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeSearch();
+    });
+    searchInput?.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        searchDialog.querySelector('form').submit();
+      }
+    });
+
+    // Dropdown user menu
+    document.querySelectorAll('.dropdown').forEach(dropdown => {
+      dropdown.addEventListener('click', (e) => {
+        if (e.target.closest('.dropdown-toggle')) {
+          dropdown.toggleAttribute('open');
+          dropdown.querySelector('.dropdown-toggle').setAttribute('aria-expanded', dropdown.hasAttribute('open'));
+        }
+      });
+    });
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.dropdown')) {
+        document.querySelectorAll('.dropdown[open]').forEach(d => {
+          d.removeAttribute('open');
+          d.querySelector('.dropdown-toggle')?.setAttribute('aria-expanded', 'false');
+        });
+      }
+    });
+  </script>
+</body>
+</html>

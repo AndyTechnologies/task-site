@@ -1,0 +1,92 @@
+{% extends 'tasks/base.html' %}
+
+{% block sidebar_content %}
+{% for t in sidebar_tasks %}
+<a href="{{ t.get_absolute_url }}" class="sidebar-item {% if t.pk == task.pk %}active{% endif %}" aria-current="{% if t.pk == task.pk %}page{% endif %}">
+    <span class="sidebar-item-main">
+        <span class="sidebar-item-title">{{ t.title }}</span>
+    </span>
+    <span class="sidebar-item-badge">
+        <span class="badge badge-{{ t.status }}">{{ t.get_status_display }}</span>
+    </span>
+</a>
+{% empty %}
+<div class="sidebar-item" style="color: var(--color-text-tertiary); justify-content: center; padding: var(--space-4);">
+    No hay tareas accesibles
+</div>
+{% endfor %}
+{% endblock %}
+
+{% block page_header %}
+<header class="page-header">
+    <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: var(--space-4);">
+        <div>
+            <h1 class="page-title">Mis tareas</h1>
+            <p class="page-subtitle">Gestiona y organiza tu trabajo</p>
+        </div>
+        <a href="{% url 'tasks:new' %}" class="btn btn-primary">
+            <svg width="1.125rem" height="1.125rem" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+            Nueva tarea
+        </a>
+    </div>
+</header>
+{% endblock %}
+
+{% block tasks_content %}
+<section aria-label="Lista de tareas">
+    {% if tasks %}
+    <div class="task-list" role="list">
+        {% for task in tasks %}
+        <article class="task-item" role="listitem">
+            <a href="{{ task.get_absolute_url }}" class="task-item-main">
+                <h2 class="task-item-title">{{ task.title }}</h2>
+                {% if task.body %}
+                <p class="task-item-body">{{ task.body|truncatewords:30 }}</p>
+                {% endif %}
+                <div class="task-item-meta">
+                    <span class="badge badge-{{ task.status }}">{{ task.get_status_display }}</span>
+                    <span>Creado por: {{ task.created_by.username }}</span>
+                    <span>Actualizado: {{ task.updated_at|timesince }} hace</span>
+                </div>
+            </a>
+            <span class="task-item-status">
+                <span class="badge badge-{{ task.status }}">{{ task.get_status_display }}</span>
+            </span>
+        </article>
+        {% endfor %}
+    </div>
+
+    {% if is_paginated %}
+    <nav class="pagination" style="display: flex; justify-content: center; gap: var(--space-2); margin-top: var(--space-6);" aria-label="Paginación">
+        {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}{% if search_query %}&q={{ search_query }}{% endif %}" class="btn btn-secondary btn-sm">Anterior</a>
+        {% endif %}
+        <span class="btn btn-secondary btn-sm" style="cursor: default;" aria-current="page">Página {{ page_obj.number }} de {{ paginator.num_pages }}</span>
+        {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}{% if search_query %}&q={{ search_query }}{% endif %}" class="btn btn-secondary btn-sm">Siguiente</a>
+        {% endif %}
+    </nav>
+    {% endif %}
+
+    {% else %}
+    <div class="empty-state" role="status">
+        <svg class="empty-state-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+        {% if search_query %}
+        <h2 class="empty-state-title">No hay coincidencias para "{{ search_query }}"</h2>
+        <p class="empty-state-description">Intenta con otros términos o limpia la búsqueda.</p>
+        <a href="{% url 'tasks:list' %}" class="btn btn-primary">
+            <svg width="1.125rem" height="1.125rem" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
+            Limpiar búsqueda
+        </a>
+        {% else %}
+        <h2 class="empty-state-title">No hay tareas aún</h2>
+        <p class="empty-state-description">Crea tu primera tarea para comenzar a organizar tu trabajo.</p>
+        <a href="{% url 'tasks:new' %}" class="btn btn-primary">
+            <svg width="1.125rem" height="1.125rem" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+            Crear primera tarea
+        </a>
+        {% endif %}
+    </div>
+    {% endif %}
+</section>
+{% endblock %}
