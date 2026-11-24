@@ -74,7 +74,7 @@ def register(page: Page, live_server_url: str, username: str, email: str, passwo
     page.goto(f"{live_server_url}/cuentas/registro/")
     page.get_by_label("Nombre de usuario").fill(username)
     page.get_by_label("Correo electrónico").fill(email)
-    page.get_by_label("Contraseña").fill(password)
+    page.get_by_placeholder("Contraseña", exact=True).fill(password)
     page.get_by_label("Confirmar contraseña").fill(password_confirm)
     page.get_by_role("button", name="Registrarse").click()
     # Should redirect to login on success
@@ -101,7 +101,7 @@ def register_expecting_error(page: Page, live_server_url: str, username: str, em
     page.goto(f"{live_server_url}/cuentas/registro/")
     page.get_by_label("Nombre de usuario").fill(username)
     page.get_by_label("Correo electrónico").fill(email)
-    page.get_by_label("Contraseña").fill(password)
+    page.get_by_placeholder("Contraseña", exact=True).fill(password)
     page.get_by_label("Confirmar contraseña").fill(password_confirm)
     page.get_by_role("button", name="Registrarse").click()
     # Stay on registration page (errors)

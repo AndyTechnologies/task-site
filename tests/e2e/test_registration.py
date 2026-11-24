@@ -30,7 +30,7 @@ class TestRegistrationPageLoads:
         # Check all form fields are present with correct labels
         expect(page.get_by_label("Nombre de usuario")).to_be_visible()
         expect(page.get_by_label("Correo electrónico")).to_be_visible()
-        expect(page.get_by_label("Contraseña")).to_be_visible()
+        expect(page.get_by_placeholder("Contraseña", exact=True)).to_be_visible()
         expect(page.get_by_label("Confirmar contraseña")).to_be_visible()
 
         # Check placeholders
@@ -40,8 +40,8 @@ class TestRegistrationPageLoads:
         # Check submit button
         expect(page.get_by_role("button", name="Registrarse")).to_be_visible()
 
-        # Check link to login
-        expect(page.get_by_role("link", name="Iniciar sesión")).to_be_visible()
+        # Check link to login (in form footer, not navbar)
+        expect(page.locator(".form-footer a", has_text="Iniciar sesión")).to_be_visible()
 
 
 class TestRegistrationSuccess:
@@ -128,7 +128,7 @@ class TestRegistrationValidationErrors:
         """Registration fails with empty email."""
         page.goto(f"{live_server_url}/cuentas/registro/")
         page.get_by_label("Nombre de usuario").fill("testuser")
-        page.get_by_label("Contraseña").fill("TestPass123!")
+        page.get_by_placeholder("Contraseña", exact=True).fill("TestPass123!")
         page.get_by_label("Confirmar contraseña").fill("TestPass123!")
         page.get_by_role("button", name="Registrarse").click()
 
@@ -166,7 +166,7 @@ class TestRegistrationAccessibility:
         # Check each input has an associated label
         username_input = page.get_by_label("Nombre de usuario")
         email_input = page.get_by_label("Correo electrónico")
-        password1_input = page.get_by_label("Contraseña")
+        password1_input = page.get_by_placeholder("Contraseña", exact=True)
         password2_input = page.get_by_label("Confirmar contraseña")
 
         expect(username_input).to_be_visible()
@@ -181,7 +181,8 @@ class TestRegistrationAccessibility:
         # Check for required indicators (asterisks in labels)
         expect(page.locator("label:has-text('Nombre de usuario') >> .. >> span[aria-hidden='true']")).to_contain_text("*")
         expect(page.locator("label:has-text('Correo electrónico') >> .. >> span[aria-hidden='true']")).to_contain_text("*")
-        expect(page.locator("label:has-text('Contraseña') >> .. >> span[aria-hidden='true']")).to_contain_text("*")
+        # Use exact text match for the first Contraseña label
+        expect(page.locator("label:has-text('Contraseña')").first.locator(".. >> span[aria-hidden='true']")).to_contain_text("*")
         expect(page.locator("label:has-text('Confirmar contraseña') >> .. >> span[aria-hidden='true']")).to_contain_text("*")
 
     def test_autocomplete_attributes(self, page: Page, live_server_url: str):
@@ -190,5 +191,5 @@ class TestRegistrationAccessibility:
 
         expect(page.get_by_label("Nombre de usuario")).to_have_attribute("autocomplete", "username")
         expect(page.get_by_label("Correo electrónico")).to_have_attribute("autocomplete", "email")
-        expect(page.get_by_label("Contraseña")).to_have_attribute("autocomplete", "new-password")
+        expect(page.get_by_placeholder("Contraseña", exact=True)).to_have_attribute("autocomplete", "new-password")
         expect(page.get_by_label("Confirmar contraseña")).to_have_attribute("autocomplete", "new-password")

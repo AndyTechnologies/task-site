@@ -77,6 +77,8 @@ class TaskCreateView(LoginRequiredMixin, CreateView):
         context = super().get_context_data(**kwargs)
         context["page_title"] = "Nueva tarea"
         context["form_action"] = "Crear"
+        # Sidebar: tareas accesibles para navegación
+        context["sidebar_tasks"] = Task.objects.accessible_by(self.request.user).select_related("created_by").order_by("-updated_at")
         return context
 
 
@@ -134,6 +136,8 @@ class TaskUpdateView(TaskAccessMixin, UpdateView):
         context = super().get_context_data(**kwargs)
         context["page_title"] = f"Editar: {self.object.title}"
         context["form_action"] = "Guardar cambios"
+        # Sidebar: tareas accesibles para navegación
+        context["sidebar_tasks"] = Task.objects.accessible_by(self.request.user).select_related("created_by").order_by("-updated_at")
         return context
 
 
